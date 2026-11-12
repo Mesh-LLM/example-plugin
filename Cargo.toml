@@ -1,0 +1,22 @@
+[package]
+name = "mesh-example"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+description = "Example plugin for Mesh LLM: minimal template for external plugin authors"
+repository = "https://github.com/Mesh-LLM/example-plugin"
+
+[dependencies]
+anyhow = "1"
+axum = { version = "0.8", features = ["json"] }
+clap = { version = "4", features = ["derive", "env"] }
+mesh-llm-plugin = { git = "https://github.com/Mesh-LLM/mesh-llm", rev = "71a28b5830d81bf83effcf1e08d37377540cf829" }
+reqwest = { version = "0.12", features = ["json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+
+[dev-dependencies]
+tempfile = "3"
+tower = { version = "0.5", features = ["util"] }
