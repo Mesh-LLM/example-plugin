@@ -13,10 +13,11 @@ the starting point for your own plugin.
   server, the `plugin!` manifest declaration (capabilities, inference
   provider, health hook) and the host runtime loop.
 - `src/server.rs` — the plugin's HTTP surface with its unit tests.
-- `.github/workflows/ci.yml` — formatting, Clippy, tests and build on Linux,
-  macOS and Windows.
+- `.github/workflows/ci.yml` — formatting, Clippy, tests and build on Linux
+  (x86-64 and ARM64), macOS and Windows (x86-64 and ARM64).
 - `.github/workflows/release.yml` — tagged release builds publishing
-  `tar.gz` archives for Linux/macOS and a `zip` archive for Windows.
+  `tar.gz` archives for Linux (x86-64, ARM64) and macOS, and `zip` archives
+  for Windows (x86-64, ARM64).
 
 ## Build and test
 
@@ -44,7 +45,8 @@ endpoint returns, set with `--greeting` or `EXAMPLE_GREETING`.
 ## Release
 
 Push a `v*` tag (or dispatch the Release workflow against an existing tag).
-The workflow builds and tests on Linux, macOS and Windows, packages
-`plugin.toml` and this README next to the binary, and publishes both a
+The workflow builds and tests on Linux (x86-64 and ARM64), macOS and Windows
+(x86-64 and ARM64), packages `plugin.toml` and this README next to the
+binary, and publishes both a
 stable-named archive (`mesh-example-<target>.tar.gz` or `.zip`) and a
 versioned one (`mesh-example-<version>-<target>.…`) to the GitHub release.
