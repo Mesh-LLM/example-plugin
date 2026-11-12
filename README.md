@@ -62,4 +62,8 @@ sha256sum -c SHA256SUMS --ignore-missing
 gh attestation verify mesh-example-<target>.tar.gz --repo <owner>/<repo>
 ```
 
-Use the `.zip` archive name on Windows targets.
+Use the `.zip` archive name on Windows targets. `sha256sum` is GNU coreutils
+(Linux, Git for Windows); on macOS use `shasum -a 256 -c SHA256SUMS` with all
+archives present, and on Windows without it compare
+`Get-FileHash <archive> -Algorithm SHA256` against the matching `SHA256SUMS`
+line.
