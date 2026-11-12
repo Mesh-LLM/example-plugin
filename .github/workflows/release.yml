@@ -110,9 +110,42 @@ jobs:
             mesh-example-*.zip
           if-no-files-found: error
 
+  checksums:
+    name: Write SHA256SUMS
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download archives
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Write SHA256SUMS
+        working-directory: artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Every target ships a stable and a versioned archive name: 5 targets x 2.
+          expected=10
+          (sha256sum ./*.tar.gz ./*.zip | sed 's#  \./#  #' | sort -k2 > SHA256SUMS)
+          cat SHA256SUMS
+          test "$(wc -l < SHA256SUMS)" -eq "$expected"
+
+      - name: Upload SHA256SUMS
+        uses: actions/upload-artifact@v4
+        with:
+          name: SHA256SUMS
+          path: artifacts/SHA256SUMS
+          if-no-files-found: error
+
   publish:
     name: Publish GitHub release
-    needs: build
+    needs: [build, checksums]
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
@@ -120,6 +153,18 @@ jobs:
         with:
           path: artifacts
           merge-multiple: true
+
+      - name: Verify archives against SHA256SUMS
+        working-directory: artifacts
+        run: sha256sum -c SHA256SUMS
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+        with:
+          subject-path: |
+            artifacts/*.tar.gz
+            artifacts/*.zip
+            artifacts/SHA256SUMS
 
       - name: Publish release
         uses: softprops/action-gh-release@v2

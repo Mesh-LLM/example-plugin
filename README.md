@@ -50,3 +50,20 @@ The workflow builds and tests on Linux (x86-64 and ARM64), macOS and Windows
 binary, and publishes both a
 stable-named archive (`mesh-example-<target>.tar.gz` or `.zip`) and a
 versioned one (`mesh-example-<version>-<target>.…`) to the GitHub release.
+
+### Verify a release
+
+Each release carries a `SHA256SUMS` file covering every archive, and build
+provenance attestations for every archive and for `SHA256SUMS`. Download the
+archives and `SHA256SUMS` into one directory, then check them:
+
+```sh
+sha256sum -c SHA256SUMS --ignore-missing
+gh attestation verify mesh-example-<target>.tar.gz --repo <owner>/<repo>
+```
+
+Use the `.zip` archive name on Windows targets. `sha256sum` is GNU coreutils
+(Linux, Git for Windows); on macOS use `shasum -a 256 -c SHA256SUMS` with all
+archives present, and on Windows without it compare
+`Get-FileHash <archive> -Algorithm SHA256` against the matching `SHA256SUMS`
+line.
